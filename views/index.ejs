@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../styles/alert.css">
 </head>
 
 <body>
@@ -36,35 +37,86 @@
         </div>
     </nav>
     <section>
-        <table class="table table-bordered my-5 container">
-            <thead>
-                <tr class="text-center table-dark">
-                    <th scope="col">ID</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">E-mail</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider text-center">
-                <tr>
-                    <th scope="row">1</th>
-                    <td><img src="" alt=""></td>
-                    <td>Bikash</td>
-                    <td>H5H7g@example.com</td>
-                    <td>+91 123456789</td>
-                    <td>
-                        <a href="" class="text-success mx-2"> <i class="fas fa-edit"></i></a>
-                        <a href="" class="text-danger"> <i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <% if (message) { %>
+            <div class="toast-container  top-0 end-0 p-3 mt-5">
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-body bg-<%= message.type === 'success' ? 'success' : 'danger' %> text-white">
+                        <%= message.message %>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> -->
+                    </div>
+                </div>
+            </div>
+            <% } %>
+                <table class="table table-bordered my-5 container">
+                    <% if (users !='' ) { %>
+                        <thead>
+                            <tr class="text-center table-dark">
+                                <th scope="col">ID</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider text-center">
+                            <% users.forEach((row,index)=> { %>
+                                <tr class="align-middle">
+                                    <td>
+                                        <%= index%>
+                                    </td>
+                                    <td><img src="<%= row.image%>" width="50" class="img-thumbnail" alt="img"></td>
+                                    <td>
+                                        <%= row.name%>
+                                    </td>
+                                    <td>
+                                        <%= row.email%>
+                                    </td>
+                                    <td>
+                                        <%= row.phone%>
+                                    </td>
+                                    <td>
+                                        <a href="/edit/<%=row._id%>" class="text-success mx-2"> <i
+                                                class="fas fa-edit"></i></a>
+                                        <a href="/delete/<%=row._id%>" class="text-danger"> <i
+                                                class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                        <% } else { %>
+                            <thead>
+                                <tr class="text-center table-dark">
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">E-mail</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                                <tr>
+                                    <td class="text-danger fw-bold">No Data found ... </td>
+                                </tr>
+                            </tbody>
+                            <% } %>
+
+                </table>
     </section>
 
 </body>
+<script>
+    setTimeout(function () {
+        var toastEl = document.querySelector('.toast');
+        if (toastEl) {
+            var toast = new bootstrap.Toast(toastEl);
+            toast.hide();
+        }
+    }, 3000);
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"
     integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </html>

@@ -31,6 +31,7 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 
 app.use(userRouter);
+app.use(express.static('images'))
 
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

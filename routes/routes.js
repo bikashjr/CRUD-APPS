@@ -18,31 +18,43 @@ let upload = multer({
 }).single('image')
 
 // to add a user in db 
-router.post('/add', upload, (req, res) => {
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        image: req.file.filename
-    })
-    user.save((err) => {
-        if (err) {
-            res.json({ message: err.message, type: 'danger' });
-        }
-        else {
-            req.session.message = {
-                type: 'success',
-                message: 'User Added Successfully'
-            }
-        }
-        res.redirect('/')
-    }
-    );
-})
+router.post('/add', upload, async (req, res) => {
+    try {
+        const user = new User({
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            image: req.file.filename
+        });
+        const savedUser = await user.save();
+        console.log(savedUser);
 
-router.get('/', (req, res) => {
-    res.render('index', { title: 'Home Page' })
-})
+        if (savedUser) {
+            req.session.message = {
+                message: 'User Added Successfully',
+                type: 'success'
+            };
+            res.redirect('/');
+        }
+    } catch (error) {
+        req.session.message = {
+            message: 'User not added. ' + error.message,
+            type: 'danger'
+        };
+        res.redirect('/add');
+    }
+});
+
+
+router.get('/', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.render('index', { title: 'Home Page', users });
+    } catch (err) {
+        res.json({ message: err.message });
+    }
+});
+
 
 router.get('/add', (req, res) => {
     res.render('add_users', { title: 'Add Users' })
